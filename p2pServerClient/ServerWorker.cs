@@ -9,7 +9,8 @@ namespace p2pServerClient
 {
     public class ServerWorker
     {
-        private const string Path = "path";
+        private const string Path = @"..\..\sharedFiles";
+        private const string URL = "https://p2prest.azurewebsites.net/api";
         private const int MyPort = 1025;
         public void Start()
         {
@@ -31,6 +32,8 @@ namespace p2pServerClient
                     filenames.Add(file);
                 }
             }
+
+
 
 
 
