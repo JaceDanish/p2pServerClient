@@ -19,15 +19,15 @@ namespace p2pServerClient
         private const int MyPort = 1025;
         public async void Start()
         {
-            //await UpdateDb();
+            await UpdateDb();
 
-            HttpClient client = new HttpClient();
-            HttpResponseMessage htp = await client.GetAsync(URL + "noget");
-            if (htp != null)
-                Console.WriteLine("wooooooooooooop" + htp.ToString());
-            else
-                Console.WriteLine("Null");
-
+           // HttpClient client = new HttpClient();
+           // HttpResponseMessage htp = await client.GetAsync(URL + "noget");
+           // if (htp != null)
+           //     Console.WriteLine("wooooooooooooop" + htp.ToString());
+           // else
+           //     Console.WriteLine("Null");
+            
         }
         
         private async Task<int> UpdateDb()
@@ -54,17 +54,17 @@ namespace p2pServerClient
                     Console.WriteLine(file);
                     string jstr = JsonSerializer.Serialize(file);
                     StringContent content = new StringContent(jstr, Encoding.UTF8, "application/json");
-                    /*HttpResponseMessage result*/_ = await client.PostAsync(URL + file, content);
-                    //
-                    //if (result.IsSuccessStatusCode)
-                    //{
-                    //    jstr = await result.Content.ReadAsStringAsync();
-                    //    status = JsonSerializer.Deserialize<int>(jstr);
-                    //    //do nothing
-                    //    Console.WriteLine(status);
-                    //}
-                    //else
-                    //    Console.WriteLine("fuck2");
+                    HttpResponseMessage result = await client.PostAsync(URL + file, content);
+                    
+                    if (result.IsSuccessStatusCode)
+                    {
+                        jstr = await result.Content.ReadAsStringAsync();
+                        status = JsonSerializer.Deserialize<int>(jstr);
+                        //do nothing
+                        Console.WriteLine(status);
+                    }
+                    else
+                        Console.WriteLine(result.ToString());
                 }
             }
 
