@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using p2pServerClient.Model;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace p2pServerClient
 {
@@ -16,7 +17,7 @@ namespace p2pServerClient
         private const int MyPort = 1025;
         public void Start()
         {
-            
+            UpdateDb();
         }
 
         private async void UpdateDb()
@@ -41,10 +42,15 @@ namespace p2pServerClient
                 {
                     string jstr = JsonSerializer.Serialize(file);
                     StringContent content = new StringContent(jstr, Encoding.UTF8, "application/json");
-                    await client.PostAsync(URL, content);
+                    HttpResponseMessage result = await client.PostAsync(URL, content);
 
-                    //await resultmessage. get int-status code. do something
-
+                    int status;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        jstr = await result.Content.ReadAsStringAsync();
+                        status = JsonSerializer.Deserialize<int>(jstr);
+                        //do nothing
+                    }
                 }
             }
             
