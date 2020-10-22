@@ -21,12 +21,6 @@ namespace p2pServerClient
         {
             await UpdateDb();
 
-           // HttpClient client = new HttpClient();
-           // HttpResponseMessage htp = await client.GetAsync(URL + "noget");
-           // if (htp != null)
-           //     Console.WriteLine("wooooooooooooop" + htp.ToString());
-           // else
-           //     Console.WriteLine("Null");
             
         }
         
@@ -52,10 +46,10 @@ namespace p2pServerClient
                 foreach (string file in filenames)
                 {
                     Console.WriteLine(file);
-                    string jstr = JsonSerializer.Serialize(file);
+                    string jstr = JsonSerializer.Serialize(fep);
                     StringContent content = new StringContent(jstr, Encoding.UTF8, "application/json");
                     HttpResponseMessage result = await client.PostAsync(URL + file, content);
-                    
+                    Console.WriteLine(file + "fooop");
                     if (result.IsSuccessStatusCode)
                     {
                         jstr = await result.Content.ReadAsStringAsync();
