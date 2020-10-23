@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Text;
 using p2pServerClient.Model;
 using System.Text.Json;
@@ -24,11 +25,49 @@ namespace p2pServerClient
             p2pPath = path.Substring(0, path.Length - 55);
             p2pPath += "shareFiles";
             await UpdateDb();
+            P2pListener();
             Console.ReadKey();
             await RemoveList();
 
         }
-        
+
+        private void P2pListener()
+        {
+            TcpListener listener = new TcpListener(IPAddress.Parse(fep.Ipaddress), MyPort);
+            listener.Start();
+            while (true)
+            {
+                TcpClient socket = listener.AcceptTcpClient();
+
+                Task.Run(() =>
+                {
+                    TcpClient tempSocket = socket;
+                    DoClient(tempSocket);
+                });
+            }
+        }
+
+        private void DoClient(TcpClient tempSocket)
+        {
+            NetworkStream ns = tempSocket.GetStream();
+
+            StreamReader sr = new StreamReader(ns);
+            StreamWriter sw = new StreamWriter(ns);
+
+            string filename = sr.ReadLine();
+            string trimmedFilename = filename.Substring(0, 3);
+            if (!trimmedFilename.Equals("GET "))
+            {
+                return;
+            }
+            else
+            {
+                trimmedFilename = filename.Substring(4, filename.Length);
+            }
+            
+            
+        }
+
         private async Task<int> UpdateDb()
         {
             int status = 0;
