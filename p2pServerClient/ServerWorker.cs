@@ -53,17 +53,20 @@ namespace p2pServerClient
 
             StreamReader sr = new StreamReader(ns);
             StreamWriter sw = new StreamWriter(ns);
-
             string filename = sr.ReadLine();
-            string trimmedFilename = filename.Substring(0, 3);
+            string trimmedFilename = filename.Substring(0, 4);
             if (!trimmedFilename.Equals("GET "))
             {
                 return;
             }
             else
             {
-                trimmedFilename = filename.Substring(4, filename.Length);
+                trimmedFilename = "\\" + filename.Substring(4, filename.Length - 4);
             }
+            FileStream fs = File.OpenRead(p2pPath + trimmedFilename);
+            fs.CopyTo(ns);
+            sw.WriteLine("woop");
+            Console.WriteLine(fs.Name);
             
             
         }
