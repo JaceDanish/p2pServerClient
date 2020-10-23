@@ -13,12 +13,14 @@ namespace p2pServerClient
 {
     public class ServerWorker
     {
-        //private const string Path = @"..\..\sharedFiles";
-        private const string path = @"C:\Users\janni\source\repos\p2p\shareFiles";
+        private string path = Directory.GetCurrentDirectory();
+        private string p2pPath;
         private const string URL = "https://p2prest.azurewebsites.net/api/";
         private const int MyPort = 1025;
         public async void Start()
         {
+            p2pPath = path.Substring(0, path.Length - 55);
+            p2pPath += "shareFiles";
             await UpdateDb();
 
             
@@ -33,9 +35,9 @@ namespace p2pServerClient
 
             IList<string> filenames = new List<string>();
 
-            if (Directory.Exists(path))
+            if (Directory.Exists(p2pPath))
             {
-                foreach (string file in Directory.GetFiles(path))
+                foreach (string file in Directory.GetFiles(p2pPath))
                 {
                     filenames.Add(Path.GetFileName(file));
                 }
