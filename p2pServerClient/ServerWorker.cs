@@ -24,8 +24,9 @@ namespace p2pServerClient
             p2pPath = path.Substring(0, path.Length - 55);
             p2pPath += "shareFiles";
             await UpdateDb();
+            Console.ReadKey();
+            await RemoveList();
 
-            
         }
         
         private async Task<int> UpdateDb()
@@ -50,7 +51,6 @@ namespace p2pServerClient
                     string jstr = JsonSerializer.Serialize(fep);
                     StringContent content = new StringContent(jstr, Encoding.UTF8, "application/json");
                     HttpResponseMessage result = await client.PostAsync(URL + file, content);
-                    Console.WriteLine(file + "fooop");
                     if (result.IsSuccessStatusCode)
                     {
                         jstr = await result.Content.ReadAsStringAsync();
@@ -66,7 +66,7 @@ namespace p2pServerClient
             return status;
         }
 
-        public async void RemoveList()
+        public async Task<int> RemoveList()
         {
             using (HttpClient client = new HttpClient())
             {
@@ -77,7 +77,7 @@ namespace p2pServerClient
                     await client.PutAsync(URL + file, content);
                 }
             }
-            
+            return 0;
         }
     }
 }
