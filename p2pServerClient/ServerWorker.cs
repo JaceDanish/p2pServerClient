@@ -32,7 +32,8 @@ namespace p2pServerClient
         private async Task<int> UpdateDb()
         {
             int status = 0;
-            fep.Ipaddress = IPAddress.Loopback.ToString();
+            string hostName = Dns.GetHostName();
+            fep.Ipaddress = Dns.GetHostByName(hostName).AddressList[0].ToString();
             fep.Port = MyPort;
 
             if (Directory.Exists(p2pPath))
