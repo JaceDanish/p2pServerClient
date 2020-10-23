@@ -9,6 +9,8 @@ namespace p2pServerClient
             ServerWorker run = new ServerWorker();
             run.Start();
             Console.ReadKey();
+            run.RemoveList();
+            Console.ReadKey();
         }
     }
 }

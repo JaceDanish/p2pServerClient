@@ -17,6 +17,8 @@ namespace p2pServerClient
         private string p2pPath;
         private const string URL = "https://p2prest.azurewebsites.net/api/";
         private const int MyPort = 1025;
+        private FileEndPoint fep = new FileEndPoint();
+        private IList<string> filenames = new List<string>();
         public async void Start()
         {
             p2pPath = path.Substring(0, path.Length - 55);
@@ -29,11 +31,8 @@ namespace p2pServerClient
         private async Task<int> UpdateDb()
         {
             int status = 0;
-            FileEndPoint fep = new FileEndPoint();
             fep.Ipaddress = IPAddress.Loopback.ToString();
             fep.Port = MyPort;
-
-            IList<string> filenames = new List<string>();
 
             if (Directory.Exists(p2pPath))
             {
@@ -65,8 +64,20 @@ namespace p2pServerClient
             }
 
             return status;
+        }
 
-
+        public async void RemoveList()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                foreach (string file in filenames)
+                {
+                    string jstr = JsonSerializer.Serialize(fep);
+                    StringContent content = new StringContent(jstr, Encoding.UTF8, "application/json");
+                    await client.PutAsync(URL + file, content);
+                }
+            }
+            
         }
     }
 }
