@@ -64,17 +64,19 @@ namespace p2pServerClient
             {
                 trimmedFilename = "\\" + filename.Substring(4, filename.Length - 4);
             }
-            FileStream fs = File.OpenRead(p2pPath + trimmedFilename);
-
-            byte[] bytes = File.ReadAllBytes(p2pPath + trimmedFilename);
-            foreach (byte b in bytes)
+            if (File.Exists(p2pPath + trimmedFilename))
             {
-                bw.Write(b);
+                FileStream fs = File.OpenRead(p2pPath + trimmedFilename);
+
+                byte[] bytes = File.ReadAllBytes(p2pPath + trimmedFilename);
+                foreach (byte b in bytes)
+                {
+                    bw.Write(b);
+                }
+                bw.Flush();
+                bw?.Close();
             }
-            bw.Flush();
-            bw?.Close();
             tempSocket?.Close();
-            Console.WriteLine(fs.Name);
             
             
         }
