@@ -34,6 +34,7 @@ namespace p2pServerClient
         private void P2pListener()
         {
             TcpListener listener = new TcpListener(IPAddress.Parse(fep.Ipaddress), MyPort);
+            Console.WriteLine(fep.Ipaddress);
             listener.Start();
             while (true)
             {
@@ -52,7 +53,7 @@ namespace p2pServerClient
             NetworkStream ns = tempSocket.GetStream();
 
             StreamReader sr = new StreamReader(ns);
-            StreamWriter sw = new StreamWriter(ns);
+            BinaryWriter bw = new BinaryWriter(ns);
             string filename = sr.ReadLine();
             string trimmedFilename = filename.Substring(0, 4);
             if (!trimmedFilename.Equals("GET "))
@@ -64,8 +65,15 @@ namespace p2pServerClient
                 trimmedFilename = "\\" + filename.Substring(4, filename.Length - 4);
             }
             FileStream fs = File.OpenRead(p2pPath + trimmedFilename);
-            fs.CopyTo(ns);
-            sw.WriteLine("woop");
+
+            byte[] bytes = File.ReadAllBytes(p2pPath + trimmedFilename);
+            foreach (byte b in bytes)
+            {
+                bw.Write(b);
+            }
+            bw.Flush();
+            bw?.Close();
+            tempSocket?.Close();
             Console.WriteLine(fs.Name);
             
             
