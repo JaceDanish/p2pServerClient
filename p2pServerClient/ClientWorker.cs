@@ -4,7 +4,8 @@ using System.Text;
 
 namespace p2pServerClient
 {
-    class ClientWorker
+    public class ClientWorker
     {
+
     }
 }
