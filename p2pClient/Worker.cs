@@ -15,6 +15,7 @@ namespace p2pClient
     {
         private List<FileEndPoint> search;
         private const string URL = "https://p2prest.azurewebsites.net/api/";
+        private String path = "C:\\p2pFiles\\";
 
         public async Task Start()
         {
@@ -42,11 +43,22 @@ namespace p2pClient
             NetworkStream ns = tcpClient.GetStream();
 
             StreamWriter sw = new StreamWriter(ns);
-            BinaryReader br = new BinaryReader(ns);
 
             sw.WriteLine("GET " + filename);
+            sw.Flush();
 
+            BinaryReader br = new BinaryReader(ns);
 
+            byte[] bytes = br.ReadBytes(200000);
+
+            Console.WriteLine("woop3");
+            File.WriteAllBytes(path + filename, bytes);
+            Console.WriteLine(filename);
+
+            Console.WriteLine("Done.");
+            br.Close();
+            sw.Close();
+            
 
 
 

@@ -72,6 +72,7 @@ namespace p2pServerClient
                 foreach (byte b in bytes)
                 {
                     bw.Write(b);
+                    Console.WriteLine("woop");
                 }
                 bw.Flush();
                 bw?.Close();
