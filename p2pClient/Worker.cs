@@ -21,7 +21,7 @@ namespace p2pClient
         {
             Console.WriteLine($"Search \"file.extension\"");
             string filename = Console.ReadLine();
-            Console.WriteLine("woop");
+            Console.WriteLine("Searching...");
             using (HttpClient client = new HttpClient())
             {
                 HttpResponseMessage result = await client.GetAsync(URL + filename);
@@ -37,7 +37,7 @@ namespace p2pClient
                 Console.WriteLine("File not found");
                 return;
             }
-            Console.WriteLine("woop");
+            Console.WriteLine("File found");
             TcpClient tcpClient = new TcpClient(search[0].Ipaddress,search[0].Port);
 
             NetworkStream ns = tcpClient.GetStream();
@@ -49,13 +49,13 @@ namespace p2pClient
 
             BinaryReader br = new BinaryReader(ns);
 
-            byte[] bytes = br.ReadBytes(200000);
+            byte[] bytes = br.ReadBytes(2000000);
 
-            Console.WriteLine("woop3");
+            Console.WriteLine("File downloaded");
             File.WriteAllBytes(path + filename, bytes);
             Console.WriteLine(filename);
 
-            Console.WriteLine("Done.");
+            Console.WriteLine("File saved.");
             br.Close();
             sw.Close();
             
